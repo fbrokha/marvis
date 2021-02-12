@@ -35,7 +35,7 @@ The [`diselab/marvis:base`](docker/marvis-base/Dockerfile) image installs all ne
 Recommended python version: Python 3.7
 
 In the case you do not want to use the prebuilt docker, a normal ns-3 installation with *NetAnim* Python bindings will work, too.
-To easily install these have a look at our [python wheels repository](https://github.com/diselab/python-wheels).
+To easily install these have a look at our [python wheels repository](https://github.com/osmhpi/python-wheels).
 
 You also need the following packages:
 ```shell script
