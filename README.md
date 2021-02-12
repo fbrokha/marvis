@@ -1,6 +1,6 @@
 # marvis
 
-[![master](https://api.travis-ci.com/osmhpi/marvis.svg?branch=master)](https://travis-ci.com/osmhpi/marvis)
+[![master](https://api.travis-ci.com/diselab/marvis.svg?branch=master)](https://travis-ci.com/diselab/marvis)
 
 ## Contributors
 
@@ -23,19 +23,19 @@ Otherwise, you can build the [Dockerfile](./Dockerfile) in the project's root di
 `PYTHONPATH`. But you need to make sure, that you run the container with privileges to access the host network in order to have access to the host's network interfaces. You of course need to modify the volume mount to allow marvis access to your scenarios.
 
 ```sh
-docker run -it --rm --cap-add=ALL -v /var/run/docker.sock:/var/run/docker.sock --net host --pid host --userns host --privileged osmhpi/marvis:latest
+docker run -it --rm --cap-add=ALL -v /var/run/docker.sock:/var/run/docker.sock --net host --pid host --userns host --privileged diselab/marvis:latest
 ```
 
-The main image [`osmhpi/marvis`](https://hub.docker.com/r/osmhpi/marvis) is based on the images in the [docker](./docker) directory.
-The [`osmhpi/marvis:base`](docker/marvis-base/Dockerfile) image installs all neccessary dependencies for marvis,
-[`osmhpi/marvis:dev`](docker/marvis-dev/Dockerfile) is for development purposes (docker-cli in the container).
+The main image [`diselab/marvis`](https://hub.docker.com/r/diselab/marvis) is based on the images in the [docker](./docker) directory.
+The [`diselab/marvis:base`](docker/marvis-base/Dockerfile) image installs all neccessary dependencies for marvis,
+[`diselab/marvis:dev`](docker/marvis-dev/Dockerfile) is for development purposes (docker-cli in the container).
 
 ### Installation Without Docker
 
 Recommended python version: Python 3.7
 
 In the case you do not want to use the prebuilt docker, a normal ns-3 installation with *NetAnim* Python bindings will work, too.
-To easily install these have a look at our [python wheels repository](https://github.com/osmhpi/python-wheels).
+To easily install these have a look at our [python wheels repository](https://github.com/diselab/python-wheels).
 
 You also need the following packages:
 ```shell script

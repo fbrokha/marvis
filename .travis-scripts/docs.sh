@@ -28,7 +28,7 @@ done
 run git status
 
 run cd "$TRAVIS_BUILD_DIR"
-run docker run --rm -i -v "$TRAVIS_BUILD_DIR:/app" -w /app osmhpi/marvis:base << EOF
+run docker run --rm -i -v "$TRAVIS_BUILD_DIR:/app" -w /app diselab/marvis:base << EOF
 apt-get update
 apt-get install -y make graphviz
 
@@ -36,7 +36,7 @@ pip3 install -r docs/requirements.txt
 
 ln -s /app/marvis "/usr/local/lib/python3.7/dist-packages/marvis"
 
-export VERSIONS_JS_URL=https://osmhpi.github.io/marvis/versions.js
+export VERSIONS_JS_URL=https://diselab.github.io/marvis/versions.js
 
 export SUMO_HOME=
 exec make docs BUILD_TAG="$TRAVIS_BRANCH"

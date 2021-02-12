@@ -43,7 +43,7 @@ Variant 2: Using Docker
 #######################
 
 SUMO can also be used with Docker.
-We provide Docker images at the `osmhpi/sumo repository <https://hub.docker.com/r/osmhpi/sumo>`_ that can be used.
+We provide Docker images at the `diselab/sumo repository <https://hub.docker.com/r/diselab/sumo>`_ that can be used.
 After pulling the image, the simulation can be started with a new container.
 Make sure to properly setup your *volume mounts*.
 
@@ -64,7 +64,7 @@ Make sure to properly setup your *volume mounts*.
         --user=$(id -u) \
         -w /workspace \
         -v /path/to/configuration-folder:/workspace \
-        osmhpi/sumo:latest \
+        diselab/sumo:latest \
         bash
 
 Now you can proceed like in the local installation by entering the command to start SUMO in the container:

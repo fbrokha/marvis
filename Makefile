@@ -21,33 +21,33 @@ endif
 
 
 latest: git-is-clean all
-	docker tag osmhpi/marvis:base-${MARVIS_TAG} osmhpi/marvis:base
-	docker tag osmhpi/marvis:${MARVIS_TAG} osmhpi/marvis:latest
-	docker tag osmhpi/marvis:dev-${MARVIS_TAG} osmhpi/marvis:dev
+	docker tag diselab/marvis:base-${MARVIS_TAG} diselab/marvis:base
+	docker tag diselab/marvis:${MARVIS_TAG} diselab/marvis:latest
+	docker tag diselab/marvis:dev-${MARVIS_TAG} diselab/marvis:dev
 
 marvis-base:
-	${docker_build} -t osmhpi/marvis:base-${MARVIS_TAG} docker/marvis-base
+	${docker_build} -t diselab/marvis:base-${MARVIS_TAG} docker/marvis-base
 
 marvis:
-	${docker_build} -t osmhpi/marvis:${MARVIS_TAG} . -f docker/Dockerfile
+	${docker_build} -t diselab/marvis:${MARVIS_TAG} . -f docker/Dockerfile
 
 marvis-dev:
-	${docker_build} -t osmhpi/marvis:dev-${MARVIS_TAG} docker/marvis-dev
+	${docker_build} -t diselab/marvis:dev-${MARVIS_TAG} docker/marvis-dev
 
 pull-latest:
-	docker pull osmhpi/marvis:base
-	docker pull osmhpi/marvis:latest
-	docker pull osmhpi/marvis:dev
+	docker pull diselab/marvis:base
+	docker pull diselab/marvis:latest
+	docker pull diselab/marvis:dev
 
 push:
-	docker push osmhpi/marvis:base-${MARVIS_TAG}
-	docker push osmhpi/marvis:${MARVIS_TAG}
-	docker push osmhpi/marvis:dev-${MARVIS_TAG}
+	docker push diselab/marvis:base-${MARVIS_TAG}
+	docker push diselab/marvis:${MARVIS_TAG}
+	docker push diselab/marvis:dev-${MARVIS_TAG}
 
 push-latest: git-is-clean push
-	docker push osmhpi/marvis:base
-	docker push osmhpi/marvis:latest
-	docker push osmhpi/marvis:dev
+	docker push diselab/marvis:base
+	docker push diselab/marvis:latest
+	docker push diselab/marvis:dev
 
 docs:
 	$(MAKE) -C docs

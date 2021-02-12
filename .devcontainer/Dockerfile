@@ -1,6 +1,6 @@
 ARG MARVIS_TAG=
 
-FROM osmhpi/marvis:base${MARVIS_TAG:+-$MARVIS_TAG}
+FROM diselab/marvis:base${MARVIS_TAG:+-$MARVIS_TAG}
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \

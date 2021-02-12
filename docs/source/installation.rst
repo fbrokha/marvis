@@ -25,7 +25,7 @@ You of course need to modify the volume mount to allow marvis access to your sce
         --pid host \
         --userns host \
         --privileged \
-        osmhpi/marvis:latest
+        diselab/marvis:latest
 
 The main image is based on the images in the :src:`docker <docker>` directory.
 The :src:`marvis-base <docker/marvis-base/Dockerfile>` installs all neccessary dependencies for marvis,

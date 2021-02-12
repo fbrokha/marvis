@@ -1,6 +1,6 @@
 ARG MARVIS_TAG=latest
 
-FROM osmhpi/marvis:$MARVIS_TAG
+FROM diselab/marvis:$MARVIS_TAG
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \

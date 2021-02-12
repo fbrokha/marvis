@@ -1,9 +1,9 @@
 ARG SUMO_TAG=1.4.0
 ARG NS3_TAG=3.30
 
-FROM osmhpi/sumo:$SUMO_TAG AS sumo
+FROM diselab/sumo:$SUMO_TAG AS sumo
 
-FROM osmhpi/ns-3:$NS3_TAG
+FROM diselab/ns-3:$NS3_TAG
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
