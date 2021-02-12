@@ -1,6 +1,6 @@
-ARG COHYDRA_TAG=
+ARG MARVIS_TAG=
 
-FROM osmhpi/cohydra:base${COHYDRA_TAG:+-$COHYDRA_TAG}
+FROM osmhpi/marvis:base${MARVIS_TAG:+-$MARVIS_TAG}
 
 COPY tools /usr/local/bin
-COPY cohydra /usr/local/lib/python3.7/dist-packages/cohydra
+COPY marvis /usr/local/lib/python3.7/dist-packages/marvis

@@ -28,15 +28,15 @@ done
 run git status
 
 run cd "$TRAVIS_BUILD_DIR"
-run docker run --rm -i -v "$TRAVIS_BUILD_DIR:/app" -w /app osmhpi/cohydra:base << EOF
+run docker run --rm -i -v "$TRAVIS_BUILD_DIR:/app" -w /app osmhpi/marvis:base << EOF
 apt-get update
 apt-get install -y make graphviz
 
 pip3 install -r docs/requirements.txt
 
-ln -s /app/cohydra "/usr/local/lib/python3.7/dist-packages/cohydra"
+ln -s /app/marvis "/usr/local/lib/python3.7/dist-packages/marvis"
 
-export VERSIONS_JS_URL=https://osmhpi.github.io/cohydra/versions.js
+export VERSIONS_JS_URL=https://osmhpi.github.io/marvis/versions.js
 
 export SUMO_HOME=
 exec make docs BUILD_TAG="$TRAVIS_BRANCH"

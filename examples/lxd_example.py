@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from cohydra import ArgumentParser, Network, DockerNode, LXDNode, Scenario
+from marvis import ArgumentParser, Network, DockerNode, LXDNode, Scenario
 
 def main():
     scenario = Scenario()

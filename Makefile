@@ -1,15 +1,15 @@
 export NS3_TAG ?= 3.30
 export SUMO_TAG ?= 1.4.0
-COHYDRA_TAG ?= $(shell if [ -z "`git status --porcelain`" ]; then git rev-parse --short HEAD; else echo dirty; fi)
-export COHYDRA_TAG := ${COHYDRA_TAG}
+MARVIS_TAG ?= $(shell if [ -z "`git status --porcelain`" ]; then git rev-parse --short HEAD; else echo dirty; fi)
+export MARVIS_TAG := ${MARVIS_TAG}
 
-docker_build := docker build --build-arg NS3_TAG --build-arg SUMO_TAG --build-arg COHYDRA_TAG
+docker_build := docker build --build-arg NS3_TAG --build-arg SUMO_TAG --build-arg MARVIS_TAG
 
-.PHONY: latest cohydra-base cohydra cohydra-dev docs
+.PHONY: latest marvis-base marvis marvis-dev docs
 
-all: cohydra-base cohydra cohydra-dev
+all: marvis-base marvis marvis-dev
 	#
-	# build tag ${COHYDRA_TAG}
+	# build tag ${MARVIS_TAG}
 	#
 
 git-is-clean:
@@ -21,33 +21,33 @@ endif
 
 
 latest: git-is-clean all
-	docker tag osmhpi/cohydra:base-${COHYDRA_TAG} osmhpi/cohydra:base
-	docker tag osmhpi/cohydra:${COHYDRA_TAG} osmhpi/cohydra:latest
-	docker tag osmhpi/cohydra:dev-${COHYDRA_TAG} osmhpi/cohydra:dev
+	docker tag osmhpi/marvis:base-${MARVIS_TAG} osmhpi/marvis:base
+	docker tag osmhpi/marvis:${MARVIS_TAG} osmhpi/marvis:latest
+	docker tag osmhpi/marvis:dev-${MARVIS_TAG} osmhpi/marvis:dev
 
-cohydra-base:
-	${docker_build} -t osmhpi/cohydra:base-${COHYDRA_TAG} docker/cohydra-base
+marvis-base:
+	${docker_build} -t osmhpi/marvis:base-${MARVIS_TAG} docker/marvis-base
 
-cohydra:
-	${docker_build} -t osmhpi/cohydra:${COHYDRA_TAG} . -f docker/Dockerfile
+marvis:
+	${docker_build} -t osmhpi/marvis:${MARVIS_TAG} . -f docker/Dockerfile
 
-cohydra-dev:
-	${docker_build} -t osmhpi/cohydra:dev-${COHYDRA_TAG} docker/cohydra-dev
+marvis-dev:
+	${docker_build} -t osmhpi/marvis:dev-${MARVIS_TAG} docker/marvis-dev
 
 pull-latest:
-	docker pull osmhpi/cohydra:base
-	docker pull osmhpi/cohydra:latest
-	docker pull osmhpi/cohydra:dev
+	docker pull osmhpi/marvis:base
+	docker pull osmhpi/marvis:latest
+	docker pull osmhpi/marvis:dev
 
 push:
-	docker push osmhpi/cohydra:base-${COHYDRA_TAG}
-	docker push osmhpi/cohydra:${COHYDRA_TAG}
-	docker push osmhpi/cohydra:dev-${COHYDRA_TAG}
+	docker push osmhpi/marvis:base-${MARVIS_TAG}
+	docker push osmhpi/marvis:${MARVIS_TAG}
+	docker push osmhpi/marvis:dev-${MARVIS_TAG}
 
 push-latest: git-is-clean push
-	docker push osmhpi/cohydra:base
-	docker push osmhpi/cohydra:latest
-	docker push osmhpi/cohydra:dev
+	docker push osmhpi/marvis:base
+	docker push osmhpi/marvis:latest
+	docker push osmhpi/marvis:dev
 
 docs:
 	$(MAKE) -C docs

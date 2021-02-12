@@ -1,6 +1,6 @@
-ARG COHYDRA_TAG=latest
+ARG MARVIS_TAG=latest
 
-FROM osmhpi/cohydra:$COHYDRA_TAG
+FROM osmhpi/marvis:$MARVIS_TAG
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
