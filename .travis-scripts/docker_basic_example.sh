@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-make cohydra-base cohydra latest
+make marvis-base marvis latest
 
 cd examples
 

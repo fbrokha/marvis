@@ -93,7 +93,7 @@ html_show_sphinx = False
 
 # Link replacement
 extlinks = {
-    'src': ('https://github.com/osmhpi/cohydra/tree/master/%s', 'src ')
+    'src': ('https://github.com/diselab/marvis/tree/master/%s', 'src ')
 }
 
 # Inheritance diagram design

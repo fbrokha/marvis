@@ -20,7 +20,7 @@ RUN pip3 install --no-cache-dir \
 	sphinx-autopackagesummary \
 	&& true
 
-WORKDIR /root/cohydra
-ENV PATH=${PATH}:/root/cohydra/tools \
+WORKDIR /root/marvis
+ENV PATH=${PATH}:/root/marvis/tools \
 	PYLXD_WARNINGS=
-RUN ln -s /root/cohydra/cohydra /usr/local/lib/python3.7/site-packages/cohydra
+RUN ln -s /root/marvis/marvis /usr/local/lib/python3.7/site-packages/marvis
