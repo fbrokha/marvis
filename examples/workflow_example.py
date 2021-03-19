@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from cohydra import ArgumentParser, Network, DockerNode, SwitchNode, Scenario
+from marvis import ArgumentParser, Network, DockerNode, SwitchNode, Scenario
 
 class Example(object):
     def __init__(self):
