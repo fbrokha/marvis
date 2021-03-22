@@ -1,15 +1,7 @@
 # marvis
 
-[![master](https://api.travis-ci.com/diselab/marvis.svg?branch=master)](https://travis-ci.com/diselab/marvis)
+[![CI](https://github.com/diselab/marvis/actions/workflows/main.yml/badge.svg)](https://github.com/diselab/marvis/actions/workflows/main.yml)
 
-## Contributors
-
- - Malte Andersch
- - Arne Boockmeyer
- - Felix Gohla
- - Martin Michaelis
- - Benedikt Schenkel
- - Robert Schmid
 
 ## Installation
 
@@ -124,3 +116,14 @@ Make sure, that [`pylint`](https://www.pylint.org/) does not show any additional
 Also make sure that your code and your pull request is well documented.
 The documentation should also contain how to test your feature, if it is more complex.
 Afterwards we are going to test your new feature and review the code.
+
+
+## Contributors
+
+ - Malte Andersch
+ - Arne Boockmeyer
+ - Felix Gohla
+ - Martin Michaelis
+ - Benedikt Schenkel
+ - Robert Schmid
+ 
