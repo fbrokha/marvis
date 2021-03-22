@@ -1,6 +1,6 @@
 # marvis
 
-[![master](https://api.travis-ci.com/diselab/marvis.svg?branch=master)](https://travis-ci.com/diselab/marvis)
+![Github Actions CI](https://github.com/diselab/marvis/actions/workflows/main.yml/badge.svg)
 
 ## Contributors
 
