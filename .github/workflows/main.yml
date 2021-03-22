@@ -15,11 +15,6 @@ jobs:
             - name: Build all images
               run: make -C repo all latest
 
-    generate-docs:
-        if: github.ref == 'refs/heads/master'
-        runs-on: unbuntu-latest
-        needs: build
-        steps:
             -   name: Checkout gh-pages
                 uses: actions/checkout@v2
                 with:
@@ -66,21 +61,15 @@ jobs:
                     cd repo
                     ./.travis-scripts/build_versions.py
 
-
-    test:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Run all example scenarios
+            - name: Smoke test basic_example.py
               run: |
-                  cd repo
-                  ./.travis-scripts/docker_basic_example.sh
+                docker run --rm \
+                  --net host --pid host --userns host --privileged \
+                  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+                  -v $PWD:/examples -w /examples \
+                  ghcr.io/diselab/marvis ./basic_example.py
 
-    publish:
-        if: github.ref == 'refs/heads/master'
-        needs: [build, test]
-        runs-on: ubuntu-latest
-        steps:
+
             - name: Publish docs
               run: |
                   cd docs
@@ -93,6 +82,7 @@ jobs:
                     git commit -m "Build docs for ${GITHUB_SHA::7} on branch ${GITHUB_REF#refs/heads/}"
                     git push
                   fi
+
             - name: Login to GitHub Container Registry
               uses: docker/login-action@v1
               with:
@@ -101,4 +91,5 @@ jobs:
                   password: ${{ secrets.CR_PAT }}
 
             - name: Push latest images
+              if: github.ref == 'refs/heads/master'
               run: make -C repo push-latest
