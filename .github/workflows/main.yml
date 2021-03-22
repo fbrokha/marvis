@@ -58,11 +58,12 @@ jobs:
 
             -   name: Update availabe docs versions
                 run: |
-                    cd repo
+                    cd docs
                     ./.travis-scripts/build_versions.py
 
             - name: Smoke test basic_example.py
               run: |
+                cd repo/examples
                 docker run --rm \
                   --net host --pid host --userns host --privileged \
                   -v /var/run/docker.sock:/var/run/docker.sock:ro \
