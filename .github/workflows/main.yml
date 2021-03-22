@@ -15,6 +15,15 @@ jobs:
             - name: Build all images
               run: make -C repo all latest
 
+            - name: Smoke test basic_example.py
+              run: |
+                cd repo/examples
+                docker run --rm \
+                  --net host --pid host --userns host --privileged \
+                  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+                  -v $PWD:/examples -w /examples \
+                  ghcr.io/diselab/marvis ./basic_example.py
+
             -   name: Checkout gh-pages
                 uses: actions/checkout@v2
                 with:
@@ -60,16 +69,6 @@ jobs:
                 run: |
                     cd docs
                     ./.travis-scripts/build_versions.py
-
-            - name: Smoke test basic_example.py
-              run: |
-                cd repo/examples
-                docker run --rm \
-                  --net host --pid host --userns host --privileged \
-                  -v /var/run/docker.sock:/var/run/docker.sock:ro \
-                  -v $PWD:/examples -w /examples \
-                  ghcr.io/diselab/marvis ./basic_example.py
-
 
             - name: Publish docs
               run: |
