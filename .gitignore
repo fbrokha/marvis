@@ -1,10 +1,9 @@
-var/*
+var
 .idea
 .vscode
 
-
 # NS-3 Directory
-ns3
+/ns3
 
 # Python caches
 *.pyc
@@ -23,7 +22,6 @@ Makefile.local
 
 # Simulation log files
 simulation-logs
-examples/simulation-logs
 docker/sawtooth-pbft/keys
 
 # Generated documentation
