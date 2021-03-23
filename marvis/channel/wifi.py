@@ -2,6 +2,7 @@
 import ipaddress
 import logging
 import os
+import re
 
 from enum import Enum, unique
 from ns import core, internet, network as ns_net, wifi, wave, propagation
@@ -37,6 +38,8 @@ class WiFiChannel(Channel):
         The WiFi standard to use.
     data_rate : :class:`.WiFiDataRate`
         The WiFi data rate to use. Please make sure to pick a valid data rate for your :code:`standard`.
+    delay : str
+        A time for delay in the channel in seconds (10s) or milliseconds (10ms) at 100m distance.
     """
 
     @unique
@@ -59,7 +62,7 @@ class WiFiChannel(Channel):
         WIFI_802_11ac = wifi.WIFI_PHY_STANDARD_80211ac
         #: "WiFi 6".
         WIFI_802_11ax = wifi.WIFI_PHY_STANDARD_80211ax
-        ## Wireless Access in Vehicular Environments (WAVE).
+        #: Wireless Access in Vehicular Environments (WAVE).
         WIFI_802_11p = wifi.WIFI_PHY_STANDARD_80211_10MHZ
 
     @unique
@@ -140,10 +143,10 @@ class WiFiChannel(Channel):
         #: Use with :attr:`.WiFiStandard.WIFI_802_11p`.
         OFDM_RATE_BW_27Mbps = "OfdmRate27MbpsBW10MHz"
 
-    def __init__(self, network, nodes, frequency=None, channel=1, channel_width=40, antennas=1, tx_power=20.0,
+    def __init__(self, network, channel_name, nodes, frequency=None, channel=1, channel_width=40, antennas=1, tx_power=20.0,
                  standard: WiFiStandard = WiFiStandard.WIFI_802_11b,
-                 data_rate: WiFiDataRate = WiFiDataRate.DSSS_RATE_11Mbps):
-        super().__init__(network, nodes)
+                 data_rate: WiFiDataRate = WiFiDataRate.DSSS_RATE_11Mbps, delay="0ms"):
+        super().__init__(network, channel_name, nodes)
 
         #: The channel to use.
         self.channel = channel
@@ -161,6 +164,8 @@ class WiFiChannel(Channel):
         self.standard = standard
         #: The data rate to use.
         self.data_rate = data_rate
+        #: The delay for the channel
+        self.delay = delay
 
         logger.debug("Setting up physical layer of WiFi.")
         self.wifi_phy_helper = wifi.YansWifiPhyHelper.Default()
@@ -180,6 +185,7 @@ class WiFiChannel(Channel):
 
         wifi_channel = wifi.YansWifiChannel()
         self.propagation_delay_model = propagation.ConstantSpeedPropagationDelayModel()
+        self.set_delay(self.delay)
         wifi_channel.SetAttribute("PropagationDelayModel", core.PointerValue(self.propagation_delay_model))
 
         if self.standard == WiFiChannel.WiFiStandard.WIFI_802_11p:
@@ -238,21 +244,33 @@ class WiFiChannel(Channel):
         logger.info('Setting IP addresses on nodes.')
         stack_helper = internet.InternetStackHelper()
 
-        for i, node in enumerate(nodes):
+        for i, connected_node in enumerate(nodes):
             ns3_device = self.devices_container.Get(i)
+            node = connected_node.node
 
             address = None
+            interface = None
             if node.wants_ip_stack():
                 if node.ns3_node.GetObject(internet.Ipv4.GetTypeId()) is None:
                     logger.info('Installing IP stack on %s', node.name)
                     stack_helper.Install(node.ns3_node)
-                device_container = ns_net.NetDeviceContainer(ns3_device)
-                ip_address = self.network.address_helper.Assign(device_container).GetAddress(0)
-                netmask = network.network.prefixlen
-                address = ipaddress.ip_interface(f'{ip_address}/{netmask}')
+                address = connected_node.address
+                if address is None:
+                    address = self.network.get_free_ip_address()
 
-            interface = Interface(node=node, ns3_device=ns3_device, address=address)
-            ns3_device.GetMac().SetAddress(ns_net.Mac48Address(interface.mac_address))
+                network_address = ipaddress.ip_network(f'{str(address)}/{network.netmask}', strict=False)
+                ns3_network_address = ns_net.Ipv4Address(network_address.network_address)
+                ns3_network_prefix = ns_net.Ipv4Mask(network_address.netmask)
+                base = ipaddress.ip_address(int(address) - int(network_address.network_address))
+                helper = internet.Ipv4AddressHelper(ns3_network_address, ns3_network_prefix,
+                                                    base=ns_net.Ipv4Address(str(base)))
+                device_container = ns_net.NetDeviceContainer(ns3_device)
+                helper.Assign(device_container)
+                interface = Interface(node=node, ns3_device=ns3_device,
+                                      address=ipaddress.ip_interface(f'{str(address)}/{network.netmask}'))
+            else:
+                interface = Interface(node=node, ns3_device=ns3_device, address=connected_node.address)
+            ns3_device.SetAddress(ns_net.Mac48Address(interface.mac_address))
             node.add_interface(interface)
             self.interfaces.append(interface)
 
@@ -261,3 +279,29 @@ class WiFiChannel(Channel):
         for interface in self.interfaces:
             pcap_log_path = os.path.join(simulation.log_directory, interface.pcap_file_name)
             self.wifi_phy_helper.EnablePcap(pcap_log_path, interface.ns3_device, True, True)
+
+    def set_delay(self, delay):
+        logger.info(f"Set delay of channel {self.channel_name} to {delay}")
+
+        pattern = re.compile("(\\d+)(m?s)$")
+        match_result = pattern.search(delay)
+        if match_result is None:
+            raise ValueError("Delay has to be in seconds or milliseconds.")
+
+        delay = match_result.group(1)
+        if match_result.group(2) == "s":
+            delay = delay * 1000
+        delay = str(delay) + "ms"
+        self.delay = delay
+
+        if self.propagation_delay_model is not None:
+            # Check if the given delay should be 0. The regex defines all supported time modes.
+            if delay == "0ms":
+                self.propagation_delay_model.SetSpeed(299792458)  # Light Speed
+            else:
+                # Initial setup: 100ms one-way means 1000 m/s speed
+                self.propagation_delay_model.SetSpeed((100.0 / int(delay[:-2])) * 1000.0)
+
+    def set_data_rate(self, data_rate):
+        logger.info(f"Set delay of channel {self.channel_name} to {data_rate}")
+        self.data_rate = data_rate  # This have no effect after creating the network so far.

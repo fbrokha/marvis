@@ -5,13 +5,18 @@ from marvis import ArgumentParser, Scenario, Network, SwitchNode, DockerNode, SS
 def main():
     scenario = Scenario()
 
-    net = Network("10.0.0.0", "255.255.255.0")
+    net = Network("10.0.0.0", "255.255.255.0", delay="200ms")
 
     node1 = DockerNode('pong', docker_build_dir='./docker/pong')
     node2 = SwitchNode('bridge-1')
     node3 = SSHNode('ping', '10.243.42.11')
-    net.connect(node1, node2, delay='200ms')
-    net.connect(node2, node3, delay='200ms')
+
+    channel1 = net.create_channel("channel1")
+    channel1.connect(node1)
+    channel1.connect(node2)
+    channel2 = net.create_channel("channel2")
+    channel2.connect(node2)
+    channel2.connect(node3)
 
     scenario.add_network(net)
     with scenario as sim:

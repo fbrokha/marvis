@@ -5,15 +5,17 @@ from marvis import ArgumentParser, Network, DockerNode, Scenario, WiFiChannel
 def main():
     scenario = Scenario()
 
-    net = Network("10.0.0.0", "255.255.255.0")
+    net = Network("10.0.0.0", "255.255.255.0", default_channel_type=WiFiChannel)
 
-    node1 = DockerNode('ping', docker_build_dir='./docker/ping', command=["tail", "-f", "/dev/null"])
+    node1 = DockerNode('ping', docker_build_dir='./docker/ping')
     node1.set_position(0, 50, 0)
     node2 = DockerNode('pong', docker_build_dir='./docker/pong')
     node2.set_position(5, 50, 0)
     # Also have a look at the WiFiChannel initializer. There are some more options you can configure.
     # E.g. the WiFi standard, transmit power and channel number can be set.
-    net.connect(node1, node2, channel_type=WiFiChannel)
+    channel = net.create_channel()
+    channel.connect(node1)
+    channel.connect(node2)
 
     scenario.add_network(net)
 

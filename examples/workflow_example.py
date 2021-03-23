@@ -2,9 +2,11 @@
 
 from marvis import ArgumentParser, Network, DockerNode, SwitchNode, Scenario
 
+
 class Example(object):
     def __init__(self):
         self.some_value = 21
+
 
 def main():
     scenario = Scenario()
@@ -14,12 +16,19 @@ def main():
     bridge = SwitchNode('br-1')
 
     server = DockerNode('server', docker_image='httpd:2.4')
-    net.connect(server, bridge, delay='0', speed='1000Mbps')
+    channel_server = net.create_channel(data_rate="1000Mbps")
+    channel_server.connect(server)
+    channel_server.connect(bridge)
 
     client1 = DockerNode('client-1', docker_build_dir='./docker/curl-webserver', cpus=0.5, memory="128m")
+    channel_client1 = net.create_channel(delay="50ms", data_rate="100Mbps")
+    channel_client1.connect(client1)
+    channel_client1.connect(bridge)
+
     client2 = DockerNode('client-2', docker_build_dir='./docker/curl-webserver', cpus=0.5, memory="128m")
-    net.connect(client1, bridge, delay='50ms', speed='100Mbps')
-    net.connect(client2, bridge, delay='20ms', speed='100Mbps')
+    channel_client2 = net.create_channel(delay="20ms", data_rate="100Mbps")
+    channel_client2.connect(client2)
+    channel_client2.connect(bridge)
 
     example = Example()
 
@@ -40,6 +49,7 @@ def main():
     with scenario as sim:
         # To simulate forever, just do not specifiy the time parameter.
         sim.simulate(simluation_time=60)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()

@@ -42,7 +42,7 @@ jobs:
               rm -rf "$ref"
             fi
           done
-
+          
       - name: Generate docs
         run: |
           GITHUB_BRANCH=${GITHUB_REF#refs/heads/}
@@ -86,7 +86,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-
+          
       - name: Push latest images
         if: github.ref == 'refs/heads/master'
         run: make -C repo push-latest

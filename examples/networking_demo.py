@@ -10,7 +10,10 @@ def main():
 
     ping = SSHNode('ping')
     pong = SSHNode('pong')
-    net.connect(ping, pong, delay='150ms', speed='100Mbps')
+
+    channel = net.create_channel(delay='150ms', speed='100Mbps')
+    channel.connect(ping)
+    channel.connect(pong)
 
     scenario.add_network(net)
 

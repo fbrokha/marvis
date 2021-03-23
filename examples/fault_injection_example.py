@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from marvis import ArgumentParser, Network, DockerNode, Scenario
+from cohydra import ArgumentParser, Network, DockerNode, Scenario
 
 def main():
     scenario = Scenario()
@@ -10,15 +10,20 @@ def main():
 
     node1 = DockerNode('ping', docker_build_dir='./docker/ping')
     node2 = DockerNode('pong', docker_build_dir='./docker/pong')
-    channel = net.create_channel(delay="200ms")
+    channel = net.create_channel(delay="10ms")
     channel.connect(node1, "10.0.0.17")
     channel.connect(node2)
 
     scenario.add_network(net)
 
+    @scenario.workflow
+    def increase_delay(workflow):
+        workflow.sleep(60)
+        net.set_delay("50ms")  # Inject a fault by increasing the delay to 50ms
+
     with scenario as sim:
         # To simulate forever, just do not specifiy the simulation_time parameter.
-        sim.simulate(simulation_time=60)
+        sim.simulate(simulation_time=240)
 
 if __name__ == "__main__":
     parser = ArgumentParser()

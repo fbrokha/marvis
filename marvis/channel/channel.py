@@ -18,13 +18,21 @@ class Channel:
     ----------
     network : :class:`.Network`
         The network this channel belongs to.
+    channel_name : str
+        The name of the channel
     nodes : list of :class:`.Node`
         The nodes to connect on a physical channel.
     """
 
-    def __init__(self, network, nodes):
+    def __init__(self, network, channel_name, nodes):
+        if len(nodes) < 2:
+            raise ValueError(f"The channel {channel_name} has less than 2 nodes. Abort.")
+
         #: The network the channel belongs to.
         self.network = network
+
+        #: The name of the channel
+        self.channel_name = channel_name
 
         #: All Interfaces (~network cards) on this channel.
         self.interfaces = []
@@ -32,8 +40,8 @@ class Channel:
         logger.debug('Creating container with %d nodes', len(nodes))
         #: A container with all ns-3 internal nodes.
         self.ns3_nodes_container = ns_net.NodeContainer()
-        for node in nodes:
-            self.ns3_nodes_container.Add(node.ns3_node)
+        for connected_node in nodes:
+            self.ns3_nodes_container.Add(connected_node.node.ns3_node)
 
     @property
     def nodes(self):

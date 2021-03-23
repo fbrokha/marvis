@@ -1,4 +1,4 @@
-ARG PROJECT_TAG=
+ARG PROJECT_TAG
 
 FROM ghcr.io/diselab/marvis:base${PROJECT_TAG:+-$PROJECT_TAG}
 
