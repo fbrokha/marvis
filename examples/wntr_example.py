@@ -8,7 +8,7 @@ import wntr
 def main():
     scenario = Scenario()
 
-    simulation_time = 1*3600  # in seconds
+    simulation_time = 1 * 3600  # in seconds
 
     net = Network("10.0.0.0", "255.255.255.0", default_channel_type=WiFiChannel, frequency=5860, channel_width=10,
                   tx_power=18.0, standard=WiFiChannel.WiFiStandard.WIFI_802_11p,
@@ -33,6 +33,10 @@ def main():
     channel_2b.connect(bridge)
 
     scenario.add_network(net)
+
+    pressure_sensors = ['n1', 'n4', 'n31', 'n54', 'n105', 'n114', 'n163', 'n188', 'n215', 'n229', 'n288', 'n296',
+                        'n332', 'n342', 'n410', 'n415', 'n429', 'n458', 'n469', 'n495', 'n506', 'n516', 'n519', 'n549',
+                        'n613', 'n636', 'n644', 'n679', 'n722', 'n726', 'n740', 'n752', 'n769']
 
     # wn = WNTRMobilityInput(duration=simulation_time, inp_path='docker/wntr/scenario/L-TOWN.inp', step_length=60)
     wn = wntr.network.WaterNetworkModel('docker/wntr/scenario/L-TOWN.inp')
